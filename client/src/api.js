@@ -30,3 +30,12 @@ export async function deleteTask(id) {
   const r = await fetch(`${API}/tasks/${id}`, { method: "DELETE" });
   if (!(r.ok || r.status === 204)) throw new Error("Error al borrar tarea");
 }
+
+export async function clearDone() {
+  const res = await fetch("/api/tasks?done=true", { method: "DELETE" });
+  if (!res.ok) {
+    const data = await res.json().catch(() => ({}));
+    throw new Error(data.error || "No se pudieron eliminar las tareas hechas");
+  }
+  return true; // 204
+}

@@ -96,6 +96,22 @@ app.delete("/api/tasks/:id", (req, res) => {
   res.status(204).end();
 });
 
+
+// 🔹 Eliminar TODAS las tareas hechas (borrado masivo)
+app.delete("/api/tasks", (req, res) => {
+  const { done } = req.query;
+  if (done !== "true") {
+    return res
+      .status(400)
+      .json({ error: "Usá /api/tasks?done=true para borrar todas las hechas" });
+  }
+
+  const tasks = loadTasks();
+  const remaining = tasks.filter(t => !t.done);
+  saveTasks(remaining);
+  return res.status(204).end();
+});
+
 // --------------------
 // SERVIDOR
 // --------------------
